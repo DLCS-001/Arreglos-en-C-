@@ -116,12 +116,40 @@ void buscarContacto(const Contacto agenda[], int num_contactos) {
     }
 }
 
+void eliminarContacto(Contacto agenda[], int& num_contactos) {
+    if (num_contactos == 0) {
+        cout << "No hay contactos para eliminar." << endl;
+        return;
+    }
+
+    mostrarContactos(agenda, num_contactos);
+    int indice;
+    cout << "\nIngrese el número del contacto a eliminar (1-" << num_contactos << "): ";
+    while (!(cin >> indice) || indice < 1 || indice > num_contactos) {
+        cout << "Número invalido. Intente nuevamente: ";
+        limpiarBuffer();
+    }
+
+    indice--;
+    for (int i = indice; i < num_contactos - 1; i++) {
+        agenda[i] = agenda[i + 1];
+    }
+    num_contactos--;
+    cout << "Contacto eliminado exitosamente." << endl;
+}
+
 int main() {
     Contacto agenda[MAX_CONTACTOS];
     int num_contactos = 0;
 
-    cout << "Prueba de búsqueda:" << endl;
-    buscarContacto(agenda, num_contactos);
+    cout << "Contactos iniciales:" << endl;
+    mostrarContactos(agenda, num_contactos);
+
+    cout << "\nPrueba de eliminación:" << endl;
+    eliminarContacto(agenda, num_contactos);
+
+    cout << "\nContactos después de eliminar:" << endl;
+    mostrarContactos(agenda, num_contactos);
 
     return 0;
 }
