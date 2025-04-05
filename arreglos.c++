@@ -138,18 +138,34 @@ void eliminarContacto(Contacto agenda[], int& num_contactos) {
     cout << "Contacto eliminado exitosamente." << endl;
 }
 
+void guardarAgenda(const Contacto agenda[], int num_contactos) {
+    ofstream archivo(RUTA);
+    if (archivo.is_open()) {
+        for (int i = 0; i < num_contactos; i++) {
+            archivo << "nombre: " << agenda[i].nombre << endl;
+            archivo << "numero: " << agenda[i].telefono << endl;
+            if (!agenda[i].email.empty()) {
+                archivo << "email: " << agenda[i].email << endl;
+            }
+            archivo << "------------------------" << endl;
+        }
+        archivo.close();
+        cout << "Agenda guardada en: " << RUTA << endl;
+    } else {
+        cout << "No se pudo abrir el archivo." << endl;
+    }
+}
+
 int main() {
     Contacto agenda[MAX_CONTACTOS];
     int num_contactos = 0;
 
-    cout << "Contactos iniciales:" << endl;
-    mostrarContactos(agenda, num_contactos);
+    // Agregar contactos de prueba
+    agenda[num_contactos++] = {"Juan Pérez", "12345678", "juan@email.com"};
+    agenda[num_contactos++] = {"María García", "87654321", ""};
 
-    cout << "\nPrueba de eliminación:" << endl;
-    eliminarContacto(agenda, num_contactos);
-
-    cout << "\nContactos después de eliminar:" << endl;
-    mostrarContactos(agenda, num_contactos);
+    cout << "Guardando agenda de prueba..." << endl;
+    guardarAgenda(agenda, num_contactos);
 
     return 0;
 }
