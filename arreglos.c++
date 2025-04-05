@@ -18,32 +18,66 @@ void limpiarBuffer() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
-int mostrarMenu() {
-    int opcion;
-    cout << "\n===== MENÚ DE AGENDA =====" << endl;
-    cout << "1. Agregar contacto" << endl;
-    cout << "2. Mostrar contactos" << endl;
-    cout << "3. Buscar contacto" << endl;
-    cout << "4. Eliminar contacto" << endl;
-    cout << "5. Guardar agenda" << endl;
-    cout << "6. Cargar agenda" << endl;
-    cout << "7. Salir" << endl;
-    cout << "Elija una opcion: ";
+bool validarTelefono(const string& telefono) {
+    if (telefono.length() != 8) return false;
+    for (char c : telefono) {
+        if (!isdigit(c)) return false;
+    }
+    return true;
+}
 
-    while (!(cin >> opcion) || opcion < 1 || opcion > 7) {
-        cout << "Opcion invalida. Intente nuevamente: ";
-        limpiarBuffer();
+bool contactoExiste(Contacto agenda[], int num_contactos, const string& nombre) {
+    for (int i = 0; i < num_contactos; i++) {
+        if (agenda[i].nombre == nombre) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void agregarContacto(Contacto agenda[], int& num_contactos) {
+    if (num_contactos >= MAX_CONTACTOS) {
+        cout << "Agenda llena." << endl;
+        return;
     }
 
-    return opcion;
+    limpiarBuffer();
+    string nombre, telefono, email;
+    cout << "Ingrese nombre: ";
+    getline(cin, nombre);
+
+    if (contactoExiste(agenda, num_contactos, nombre)) {
+        cout << "Ese contacto ya existe." << endl;
+        return;
+    }
+
+    do {
+        cout << "Ingrese telefono (8 dígitos): ";
+        getline(cin, telefono);
+        if (!validarTelefono(telefono)) {
+            cout << "Telefono invalido. Intente nuevamente." << endl;
+        }
+    } while (!validarTelefono(telefono));
+
+    cout << "Ingrese email (opcional): ";
+    getline(cin, email);
+
+    agenda[num_contactos] = { nombre, telefono, email };
+    num_contactos++;
+    cout << "Contacto agregado." << endl;
 }
 
 int main() {
-    int opcion;
-    do {
-        opcion = mostrarMenu();
-        cout << "Seleccionaste la opción: " << opcion << endl;
-    } while (opcion != 7);
+    Contacto agenda[MAX_CONTACTOS];
+    int num_contactos = 0;
+
+    cout << "Prueba de agregar contactos:" << endl;
+    agregarContacto(agenda, num_contactos);
     
+    cout << "\nContacto agregado:" << endl;
+    cout << "Nombre: " << agenda[0].nombre << endl;
+    cout << "Teléfono: " << agenda[0].telefono << endl;
+    cout << "Email: " << agenda[0].email << endl;
+
     return 0;
 }
