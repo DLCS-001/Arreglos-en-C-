@@ -26,6 +26,26 @@ bool validarTelefono(const string& telefono) {
     return true;
 }
 
+int mostrarMenu() {
+    int opcion;
+    cout << "\n===== MENÚ DE AGENDA =====" << endl;
+    cout << "1. Agregar contacto" << endl;
+    cout << "2. Mostrar contactos" << endl;
+    cout << "3. Buscar contacto" << endl;
+    cout << "4. Eliminar contacto" << endl;
+    cout << "5. Guardar agenda" << endl;
+    cout << "6. Cargar agenda" << endl;
+    cout << "7. Salir" << endl;
+    cout << "Elija una opcion: ";
+
+    while (!(cin >> opcion) || opcion < 1 || opcion > 7) {
+        cout << "Opcion invalida. Intente nuevamente: ";
+        limpiarBuffer();
+    }
+
+    return opcion;
+}
+
 bool contactoExiste(Contacto agenda[], int num_contactos, const string& nombre) {
     for (int i = 0; i < num_contactos; i++) {
         if (agenda[i].nombre == nombre) {
@@ -97,8 +117,7 @@ void buscarContacto(const Contacto agenda[], int num_contactos) {
 
     bool encontrado = false;
     for (int i = 0; i < num_contactos; i++) {
-        if (agenda[i].nombre.find(busqueda) != string::npos || 
-            agenda[i].telefono.find(busqueda) != string::npos) {
+        if (agenda[i].nombre.find(busqueda) != string::npos || agenda[i].telefono.find(busqueda) != string::npos) {
             if (!encontrado) {
                 cout << "\nContactos encontrados:" << endl;
                 encontrado = true;
@@ -159,7 +178,7 @@ void guardarAgenda(const Contacto agenda[], int num_contactos) {
 void cargarAgenda(Contacto agenda[], int& num_contactos) {
     limpiarBuffer();
     char confirmar;
-    cout << "\nEsto sobrescribirá la agenda actual. ¿Desea continuar? (s/n): ";
+    cout << "\nEsto sobrescribira la agenda actual. ¿Desea continuar? (s/n): ";
     cin >> confirmar;
 
     if (confirmar != 's' && confirmar != 'S') {
@@ -203,14 +222,36 @@ void cargarAgenda(Contacto agenda[], int& num_contactos) {
 int main() {
     Contacto agenda[MAX_CONTACTOS];
     int num_contactos = 0;
+    int opcion;
 
-    cout << "Probando carga de agenda..." << endl;
-    cargarAgenda(agenda, num_contactos);
+    do {
+        opcion = mostrarMenu();
 
-    if (num_contactos > 0) {
-        cout << "\nContactos cargados:" << endl;
-        mostrarContactos(agenda, num_contactos);
-    }
+        switch (opcion) {
+            case 1:
+                agregarContacto(agenda, num_contactos);
+                break;
+            case 2:
+                mostrarContactos(agenda, num_contactos);
+                break;
+            case 3:
+                buscarContacto(agenda, num_contactos);
+                break;
+            case 4:
+                eliminarContacto(agenda, num_contactos);
+                break;
+            case 5:
+                guardarAgenda(agenda, num_contactos);
+                break;
+            case 6:
+                cargarAgenda(agenda, num_contactos);
+                break;
+            case 7:
+                guardarAgenda(agenda, num_contactos);
+                cout << "Saliendo..." << endl;
+                break;
+        }
+    } while (opcion != 7);
 
     return 0;
 }
