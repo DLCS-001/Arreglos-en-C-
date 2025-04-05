@@ -84,16 +84,44 @@ void mostrarContactos(const Contacto agenda[], int num_contactos) {
     }
 }
 
+void buscarContacto(const Contacto agenda[], int num_contactos) {
+    if (num_contactos == 0) {
+        cout << "No hay contactos en la agenda." << endl;
+        return;
+    }
+
+    limpiarBuffer();
+    string busqueda;
+    cout << "Ingrese nombre o telefono a buscar: ";
+    getline(cin, busqueda);
+
+    bool encontrado = false;
+    for (int i = 0; i < num_contactos; i++) {
+        if (agenda[i].nombre.find(busqueda) != string::npos || 
+            agenda[i].telefono.find(busqueda) != string::npos) {
+            if (!encontrado) {
+                cout << "\nContactos encontrados:" << endl;
+                encontrado = true;
+            }
+            cout << "Nombre: " << agenda[i].nombre << endl;
+            cout << "Telefono: " << agenda[i].telefono << endl;
+            if (!agenda[i].email.empty())
+                cout << "Email: " << agenda[i].email << endl;
+            cout << "------------------------" << endl;
+        }
+    }
+
+    if (!encontrado) {
+        cout << "No se encontraron contactos." << endl;
+    }
+}
+
 int main() {
     Contacto agenda[MAX_CONTACTOS];
     int num_contactos = 0;
 
-    // Agregar algunos contactos de prueba
-    agenda[num_contactos++] = {"Juan Pérez", "12345678", "juan@email.com"};
-    agenda[num_contactos++] = {"María García", "87654321", ""};
-
-    // Mostrar los contactos
-    mostrarContactos(agenda, num_contactos);
+    cout << "Prueba de búsqueda:" << endl;
+    buscarContacto(agenda, num_contactos);
 
     return 0;
 }
