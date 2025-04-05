@@ -18,36 +18,32 @@ void limpiarBuffer() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
-bool validarTelefono(const string& telefono) {
-    if (telefono.length() != 8) return false;
-    for (char c : telefono) {
-        if (!isdigit(c)) return false;
-    }
-    return true;
-}
+int mostrarMenu() {
+    int opcion;
+    cout << "\n===== MENÚ DE AGENDA =====" << endl;
+    cout << "1. Agregar contacto" << endl;
+    cout << "2. Mostrar contactos" << endl;
+    cout << "3. Buscar contacto" << endl;
+    cout << "4. Eliminar contacto" << endl;
+    cout << "5. Guardar agenda" << endl;
+    cout << "6. Cargar agenda" << endl;
+    cout << "7. Salir" << endl;
+    cout << "Elija una opcion: ";
 
-bool contactoExiste(Contacto agenda[], int num_contactos, const string& nombre) {
-    for (int i = 0; i < num_contactos; i++) {
-        if (agenda[i].nombre == nombre) {
-            return true;
-        }
+    while (!(cin >> opcion) || opcion < 1 || opcion > 7) {
+        cout << "Opcion invalida. Intente nuevamente: ";
+        limpiarBuffer();
     }
-    return false;
+
+    return opcion;
 }
 
 int main() {
-    cout << "Prueba de validarTelefono:" << endl;
-    cout << "12345678: " << (validarTelefono("12345678") ? "válido" : "inválido") << endl;
-    cout << "123: " << (validarTelefono("123") ? "válido" : "inválido") << endl;
-    cout << "12345abc: " << (validarTelefono("12345abc") ? "válido" : "inválido") << endl;
-
-    Contacto agenda[MAX_CONTACTOS];
-    int num_contactos = 1;
-    agenda[0] = {"Juan", "12345678", "juan@email.com"};
+    int opcion;
+    do {
+        opcion = mostrarMenu();
+        cout << "Seleccionaste la opción: " << opcion << endl;
+    } while (opcion != 7);
     
-    cout << "\nPrueba de contactoExiste:" << endl;
-    cout << "Buscando 'Juan': " << (contactoExiste(agenda, num_contactos, "Juan") ? "encontrado" : "no encontrado") << endl;
-    cout << "Buscando 'Pedro': " << (contactoExiste(agenda, num_contactos, "Pedro") ? "encontrado" : "no encontrado") << endl;
-
     return 0;
 }
