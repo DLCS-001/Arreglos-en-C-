@@ -67,17 +67,33 @@ void agregarContacto(Contacto agenda[], int& num_contactos) {
     cout << "Contacto agregado." << endl;
 }
 
+void mostrarContactos(const Contacto agenda[], int num_contactos) {
+    if (num_contactos == 0) {
+        cout << "No hay contactos en la agenda." << endl;
+        return;
+    }
+
+    cout << "\n===== LISTA DE CONTACTOS =====" << endl;
+    for (int i = 0; i < num_contactos; i++) {
+        cout << "\nContacto " << i + 1 << ":" << endl;
+        cout << "Nombre: " << agenda[i].nombre << endl;
+        cout << "Telefono: " << agenda[i].telefono << endl;
+        if (!agenda[i].email.empty())
+            cout << "Email: " << agenda[i].email << endl;
+        cout << "------------------------" << endl;
+    }
+}
+
 int main() {
     Contacto agenda[MAX_CONTACTOS];
     int num_contactos = 0;
 
-    cout << "Prueba de agregar contactos:" << endl;
-    agregarContacto(agenda, num_contactos);
-    
-    cout << "\nContacto agregado:" << endl;
-    cout << "Nombre: " << agenda[0].nombre << endl;
-    cout << "Teléfono: " << agenda[0].telefono << endl;
-    cout << "Email: " << agenda[0].email << endl;
+    // Agregar algunos contactos de prueba
+    agenda[num_contactos++] = {"Juan Pérez", "12345678", "juan@email.com"};
+    agenda[num_contactos++] = {"María García", "87654321", ""};
+
+    // Mostrar los contactos
+    mostrarContactos(agenda, num_contactos);
 
     return 0;
 }
