@@ -156,16 +156,61 @@ void guardarAgenda(const Contacto agenda[], int num_contactos) {
     }
 }
 
+void cargarAgenda(Contacto agenda[], int& num_contactos) {
+    limpiarBuffer();
+    char confirmar;
+    cout << "\nEsto sobrescribirá la agenda actual. ¿Desea continuar? (s/n): ";
+    cin >> confirmar;
+
+    if (confirmar != 's' && confirmar != 'S') {
+        cout << "Carga cancelada por el usuario." << endl;
+        return;
+    }
+
+    ifstream archivo(RUTA);
+    if (archivo.is_open()) {
+        num_contactos = 0;
+        string linea, separador;
+
+        while (num_contactos < MAX_CONTACTOS) {
+            if (!getline(archivo, linea) || linea.empty()) break;
+
+            if (linea.substr(0, 7) == "nombre: ") {
+                agenda[num_contactos].nombre = linea.substr(7);
+
+                if (getline(archivo, linea) && linea.substr(0, 7) == "numero: ") {
+                    agenda[num_contactos].telefono = linea.substr(7);
+
+                    if (getline(archivo, linea) && linea.substr(0, 6) == "email: ") {
+                        agenda[num_contactos].email = linea.substr(6);
+                        getline(archivo, separador);
+                    } else {
+                        agenda[num_contactos].email = "";
+                    }
+
+                    num_contactos++;
+                }
+            }
+        }
+
+        archivo.close();
+        cout << "\nAgenda cargada exitosamente desde: " << RUTA << endl;
+    } else {
+        cout << "\nError: No se pudo abrir el archivo en la ruta: " << RUTA << endl;
+    }
+}
+
 int main() {
     Contacto agenda[MAX_CONTACTOS];
     int num_contactos = 0;
 
-    // Agregar contactos de prueba
-    agenda[num_contactos++] = {"Juan Pérez", "12345678", "juan@email.com"};
-    agenda[num_contactos++] = {"María García", "87654321", ""};
+    cout << "Probando carga de agenda..." << endl;
+    cargarAgenda(agenda, num_contactos);
 
-    cout << "Guardando agenda de prueba..." << endl;
-    guardarAgenda(agenda, num_contactos);
+    if (num_contactos > 0) {
+        cout << "\nContactos cargados:" << endl;
+        mostrarContactos(agenda, num_contactos);
+    }
 
     return 0;
 }
